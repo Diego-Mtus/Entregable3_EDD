@@ -3,15 +3,19 @@
 #include <string>
 #include <chrono>
 #include <vector>
+#include <unordered_map>
 #include "hashing_abierto.h"
 #include "hashing_cerrado.h"
 
+
+// Se usó de referencia la clase online "Experimentación-20240517.mp4"
+// https://drive.google.com/file/d/1hxDNnpJrgYwXbO15Bllzr84282414nFb/view
 int main(int argc, char* argv[])
 {
     // Formato es <ejecutable> <cantidad> <estructura_de_datos> <1: id / 0: screen_name> <numero_experimento>
     if (argc < 5) {
-        std::cerr << "Uso: " << argv[0] << " <cantidad> <estructura_de_datos> <1: id / 0: screen_name> <numero_experimento>\n";
-        std::cerr << "Estructuras: abierto, lineal, cuadratico, doble\n";
+        std::cerr << "Uso: " << argv[0] << " <cantidad> <estructura_de_datos> <1: user_id / 0: screen_name> <numero_experimento>\n";
+        std::cerr << "Estructuras: abierto, lineal, cuadratico, doble, unordered_map\n";
         return 1;
     }
 
@@ -89,7 +93,17 @@ int main(int argc, char* argv[])
         }
         fin = std::chrono::high_resolution_clock::now();
 
-    } else {
+    } else if (estructura == "unordered_map") {
+        std::unordered_map<std::string, int> tabla;
+        tabla.reserve(tamano_tabla); // Reservamos espacio para la comparación más justa.
+
+        inicio = std::chrono::high_resolution_clock::now();
+        for (const auto& dato : datos) {
+            tabla[dato]++; 
+        }
+        fin = std::chrono::high_resolution_clock::now();
+    }
+    else {
         std::cerr << "Error: Estructura de datos no válida ('" << estructura << "').\n";
         return 1;
     }

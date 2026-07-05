@@ -1,7 +1,7 @@
 
 # 2. Definir los arreglos de configuración
 # Estructuras de datos a evaluar
-estructuras=("abierto" "lineal" "cuadratico" "doble")
+estructuras=("abierto" "lineal" "cuadratico" "doble" "unordered_map")
 
 # Datasets: 1 para user_ids, 0 para user_screen_names
 datasets=(1 0)
