@@ -1,48 +1,82 @@
 #include "hashing_cerrado.h"
-
 #include <cmath>
 #include <numeric>
+#include <cctype>
 
 // Definición de la constante A para h2
 const float A = (std::sqrt(5) - 1) / 2;
 
-// Implementación de funciones de hashing
-int h1(long long k, int n)
+// Auxiliar para determinar si es número o string
+bool es_numero(const std::string &s)
 {
-    return k % n;
+    if (s.empty())
+        return false;
+    for (char c : s)
+    {
+        if (!std::isdigit(c))
+            return false;
+    }
+    return true;
 }
 
-int h2(long long k, int n)
+// Implementación de funciones de hashing base
+int h1(const std::string &k, int n)
 {
-    float a = (float)k * A;
+    if (es_numero(k))
+    {
+        long long numero = std::stoll(k);
+        return std::abs(numero) % n;
+    }
+    int suma_ascii = std::accumulate(k.begin(), k.end(), 0);
+    return suma_ascii % n;
+}
+
+int h2(const std::string &k, int n)
+{
+    long long valor_numerico = 0;
+    if (es_numero(k))
+    {
+        valor_numerico = std::abs(std::stoll(k));
+    }
+    else
+    {
+        valor_numerico = std::accumulate(k.begin(), k.end(), 0);
+    }
+
+    float a = (float)valor_numerico * A;
     a -= (int)a;
     return n * a;
 }
 
-int linear_probing(long long k, int n, int i)
+// Métodos de direccionamiento abierto
+int linear_probing(const std::string &k, int n, int i)
 {
-    return (h2(k, n) + i) % n;
+    long long posicion = static_cast<long long>(h2(k, n)) + i;
+    return std::abs(posicion) % n;
 }
 
-int quadratic_probing(long long k, int n, int i)
+int quadratic_probing(const std::string &k, int n, int i)
 {
-    return (h2(k, n) + i + 2 * i * i) % n;
+    // Usamos 2LL para forzar la aritmética de 64 bits y evitar que i * i se vuelva negativo
+    long long posicion = static_cast<long long>(h2(k, n)) + i + 2LL * i * i;
+    return std::abs(posicion) % n;
 }
 
-int double_hashing(long long k, int n, int i)
+int double_hashing(const std::string &k, int n, int i)
 {
-    return (h2(k, n) + i * (h1(k, n) + 1)) % n;
+    long long posicion = static_cast<long long>(h2(k, n)) + static_cast<long long>(i) * (h1(k, n) + 1);
+    return std::abs(posicion) % n;
 }
 
 // Constructor de HashTable
-HashTable::HashTable(int size, int (*hashing_method)(long long, int, int))
+HashTable::HashTable(int size, int (*hashing_method)(const std::string &, int, int))
     : size(size), hashing_method(hashing_method)
 {
     table.resize(size);
 }
 
-// Insertar entero
-void HashTable::insert(long long key)
+// Insertar maneja user_id y user_screen_name
+void HashTable::insert(const std::string &key)
 {
     int aux_index = -1;
 
@@ -79,19 +113,13 @@ void HashTable::insert(long long key)
     }
 }
 
-// Insertar string (con overloading)
-void HashTable::insert(std::string key)
-{
-    int suma_ascii = std::accumulate(key.begin(), key.end(), 0);
-    insert(suma_ascii);
-}
-
-// Obtener por entero
-int HashTable::get(long long key)
+// Obtener maneja user_id y user_screen_name
+int HashTable::get(const std::string &key)
 {
     for (int i = 0; i < size; i++)
     {
         int index = hashing_method(key, size, i);
+
         if (table[index].state == EMPTY)
         {
             break;
@@ -105,19 +133,13 @@ int HashTable::get(long long key)
     return -1;
 }
 
-// Obtener por string (con overloading)
-int HashTable::get(std::string key)
-{
-    int suma_ascii = std::accumulate(key.begin(), key.end(), 0);
-    return get(suma_ascii);
-}
-
-// Eliminar por entero
-void HashTable::remove(long long key)
+// Eliminar maneja user_id y user_screen_name
+void HashTable::remove(const std::string &key)
 {
     for (int i = 0; i < size; i++)
     {
         int index = hashing_method(key, size, i);
+
         if (table[index].state == EMPTY)
         {
             break;
@@ -129,11 +151,4 @@ void HashTable::remove(long long key)
             return;
         }
     }
-}
-
-// Eliminar por string (con overloading)
-void HashTable::remove(std::string key)
-{
-    int suma_ascii = std::accumulate(key.begin(), key.end(), 0);
-    remove(suma_ascii);
 }

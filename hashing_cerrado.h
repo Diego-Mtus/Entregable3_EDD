@@ -18,24 +18,24 @@ enum State
 // Estructura para cada nodo de la tabla.
 struct HashNode
 {
-    long long key;
+    std::string key;
     int value;
     State state;
 
-    HashNode() : key(0), value(0), state(EMPTY) {}
+    HashNode() : key(""), value(0), state(EMPTY) {}
 };
 
 // Constante global externa para el método h2
 extern const float A;
 
-// Funciones hash
-int h1(long long k, int n);
-int h2(long long k, int n);
+// Funciones hash base
+int h1(const std::string &k, int n);
+int h2(const std::string &k, int n);
 
 // Métodos de probing
-int linear_probing(long long k, int n, int i);
-int quadratic_probing(long long k, int n, int i);
-int double_hashing(long long k, int n, int i);
+int linear_probing(const std::string &k, int n, int i);
+int quadratic_probing(const std::string &k, int n, int i);
+int double_hashing(const std::string &k, int n, int i);
 
 // Definición de la clase HashTable
 class HashTable
@@ -43,23 +43,17 @@ class HashTable
 private:
     int size;
     std::vector<HashNode> table;
-    int (*hashing_method)(long long, int, int);
+
+    int (*hashing_method)(const std::string&, int, int);
 
 public:
     // Constructor
-    HashTable(int size, int (*hashing_method)(long long, int, int));
+    HashTable(int size, int (*hashing_method)(const std::string&, int, int));
 
-    // Inserción
-    void insert(long long key);
-    void insert(std::string key);
-
-    // Búsqueda
-    int get(long long key);
-    int get(std::string key);
-
-    // Eliminación
-    void remove(long long key);
-    void remove(std::string key);
+    // soporta user_id y user_screen_name
+    void insert(const std::string &key);
+    int get(const std::string &key);
+    void remove(const std::string &key);
 };
 
 #endif // HASHING_CERRADO_H
