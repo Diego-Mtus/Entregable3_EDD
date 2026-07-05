@@ -29,13 +29,13 @@ struct HashNode
 extern const float A;
 
 // Funciones hash
-int h1(int k, int n);
-int h2(int k, int n);
+int h1(long long k, int n);
+int h2(long long k, int n);
 
 // Métodos de probing
-int linear_probing(int k, int n, int i);
-int quadratic_probing(int k, int n, int i);
-int double_hashing(int k, int n, int i);
+int linear_probing(long long k, int n, int i);
+int quadratic_probing(long long k, int n, int i);
+int double_hashing(long long k, int n, int i);
 
 // Definición de la clase HashTable
 class HashTable
@@ -43,11 +43,11 @@ class HashTable
 private:
     int size;
     std::vector<HashNode> table;
-    int (*hashing_method)(int, int, int);
+    int (*hashing_method)(long long, int, int);
 
 public:
     // Constructor
-    HashTable(int size, int (*hashing_method)(int, int, int));
+    HashTable(int size, int (*hashing_method)(long long, int, int));
 
     // Inserción
     void insert(long long key);

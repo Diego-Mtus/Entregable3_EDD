@@ -7,35 +7,35 @@
 const float A = (std::sqrt(5) - 1) / 2;
 
 // Implementación de funciones de hashing
-int h1(int k, int n)
+int h1(long long k, int n)
 {
     return k % n;
 }
 
-int h2(int k, int n)
+int h2(long long k, int n)
 {
     float a = (float)k * A;
     a -= (int)a;
     return n * a;
 }
 
-int linear_probing(int k, int n, int i)
+int linear_probing(long long k, int n, int i)
 {
     return (h2(k, n) + i) % n;
 }
 
-int quadratic_probing(int k, int n, int i)
+int quadratic_probing(long long k, int n, int i)
 {
     return (h2(k, n) + i + 2 * i * i) % n;
 }
 
-int double_hashing(int k, int n, int i)
+int double_hashing(long long k, int n, int i)
 {
     return (h2(k, n) + i * (h1(k, n) + 1)) % n;
 }
 
 // Constructor de HashTable
-HashTable::HashTable(int size, int (*hashing_method)(int, int, int))
+HashTable::HashTable(int size, int (*hashing_method)(long long, int, int))
     : size(size), hashing_method(hashing_method)
 {
     table.resize(size);
