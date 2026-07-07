@@ -2,6 +2,7 @@
 *.d
 
 auspol2019.csv
+/env
 
 # Compiled Object files
 *.slo
