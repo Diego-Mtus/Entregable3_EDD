@@ -1,0 +1,11 @@
+estructura;tipo_llave;cantidad_datos;memoria_usada
+user_ids;lineal;180000;2944
+user_screen_names;lineal;180000;2560
+user_ids;cuadratico;180000;2944
+user_screen_names;cuadratico;180000;2560
+user_ids;doble;180000;2944
+user_screen_names;doble;180000;2560
+user_ids;abierto;180000;4480
+user_screen_names;abierto;180000;4352
+user_ids;unordered_map;180000;3584
+user_screen_names;unordered_map;180000;3328
