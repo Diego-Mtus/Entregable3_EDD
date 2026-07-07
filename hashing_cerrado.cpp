@@ -19,24 +19,60 @@ bool es_numero(const std::string &s)
     return true;
 }
 
-// Implementación de funciones de hashing base
+// funciones de hashing base
 int h1(const std::string &k, int n)
 {
+ 
+    // puse que se guardara en cache el último resultado para que no tenga que recalcularlo todo el tiempo con la misma entrada
+    static std::string ultimo_k = "";
+    static int ultimo_n = -1;
+    static int ultimo_resultado = -1;
+
+    if (k == ultimo_k && n == ultimo_n) {
+        return ultimo_resultado;
+    }
+
+    int resultado = 0;
     if (es_numero(k))
     {
-        long long numero = std::stoll(k);
-        return std::abs(numero) % n;
+        long long numero = 0;
+        for (char c : k)
+        {
+            numero = numero * 10 + (c - '0');
+        }
+        resultado = std::abs(numero) % n;
     }
-    int suma_ascii = std::accumulate(k.begin(), k.end(), 0);
-    return suma_ascii % n;
+    else
+    {
+        int suma_ascii = std::accumulate(k.begin(), k.end(), 0);
+        resultado = suma_ascii % n;
+    }
+
+    // Actualizar caché
+    ultimo_k = k;
+    ultimo_n = n;
+    ultimo_resultado = resultado;
+    return resultado;
 }
 
 int h2(const std::string &k, int n)
 {
+    static std::string ultimo_k = "";
+    static int ultimo_n = -1;
+    static int ultimo_resultado = -1;
+
+    if (k == ultimo_k && n == ultimo_n) {
+        return ultimo_resultado;
+    }
+
     long long valor_numerico = 0;
     if (es_numero(k))
     {
-        valor_numerico = std::abs(std::stoll(k));
+        for (char c : k)
+        {
+            valor_numerico = valor_numerico * 10 + (c - '0');
+        }
+        valor_numerico = std::abs(valor_numerico);
     }
     else
     {
@@ -45,7 +81,14 @@ int h2(const std::string &k, int n)
 
     float a = (float)valor_numerico * A;
     a -= (int)a;
-    return n * a;
+    
+    int resultado = n * a;
+
+
+    ultimo_k = k;
+    ultimo_n = n;
+    ultimo_resultado = resultado;
+    return resultado;
 }
 
 // Métodos de direccionamiento abierto
@@ -57,7 +100,7 @@ int linear_probing(const std::string &k, int n, int i)
 
 int quadratic_probing(const std::string &k, int n, int i)
 {
-    // Usamos 2LL para forzar la aritmética de 64 bits y evitar que i * i se vuelva negativo
+    // 2LL para evitar overflow
     long long posicion = static_cast<long long>(h2(k, n)) + i + 2LL * i * i;
     return std::abs(posicion) % n;
 }
