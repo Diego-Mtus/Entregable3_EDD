@@ -1,8 +1,7 @@
 # Prerequisites
 *.d
 
-# Dataset
-*.csv
+auspol2019.csv
 
 # Compiled Object files
 *.slo
