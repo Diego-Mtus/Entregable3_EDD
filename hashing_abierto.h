@@ -8,6 +8,8 @@
 // Estructura para cada nodo de la tabla.
 struct HashNodeAbierto
 {
+
+    // Se decidió usar un string como clave para contemplar user_screen_name y user_id.
     std::string key;
     int value;
 

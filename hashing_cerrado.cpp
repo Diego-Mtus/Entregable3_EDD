@@ -3,6 +3,16 @@
 #include <numeric>
 #include <cctype>
 
+/*
+
+Las funciones hash implementadas son las mismas que se vieron en la ayudantía del lab 9, con la adición del caché para no recalcular
+tantas veces, además que se usa std::accumulate(k.begin(), k.end(), 0); al calcular el hash de un string.
+
+Todas las veces que se utiliza esa función es para transformar user_screen_name a números, mediante 
+la suma de los valores ASCII de sus caracteres, y para user_id se transforma a número directamente.
+
+*/
+
 // Definición de la constante A para h2
 const float A = (std::sqrt(5) - 1) / 2;
 
@@ -127,12 +137,14 @@ void HashTable::insert(const std::string &key)
     {
         int index = hashing_method(key, size, i);
 
+        // Si encontramos la clave, incrementamos su valor y retornamos
         if (table[index].state == OCCUPIED && table[index].key == key)
         {
             table[index].value++;
             return;
         }
 
+        // Si encontramos un índice vacío o eliminado, lo guardamos como posible lugar para insertar
         if (table[index].state == EMPTY || table[index].state == DELETED)
         {
             if (aux_index == -1)
@@ -141,6 +153,7 @@ void HashTable::insert(const std::string &key)
             }
         }
 
+        // Si llegamos a un índice vacío, significa que la clave no está en la tabla y podemos insertar en aux_index
         if (table[index].state == EMPTY)
         {
             break;
@@ -163,15 +176,19 @@ int HashTable::get(const std::string &key)
     {
         int index = hashing_method(key, size, i);
 
+        // Si encontramos un índice vacío, significa que la clave no está en la tabla
         if (table[index].state == EMPTY)
         {
             break;
         }
 
+        // Si encontramos la clave, retornamos su valor
         if (table[index].state == OCCUPIED && table[index].key == key)
         {
             return table[index].value;
         }
+
+        // Si se encuentra un índice eliminado u ocupado con otra clave, continuamos buscando
     }
     return -1;
 }
@@ -183,11 +200,15 @@ void HashTable::remove(const std::string &key)
     {
         int index = hashing_method(key, size, i);
 
+        // Si encontramos un índice vacío, significa que la clave no está en la tabla
         if (table[index].state == EMPTY)
         {
             break;
         }
 
+        // Si encontramos la clave, la marcamos como eliminada
+        // Cabe destacar que no se borra físicamente el nodo/su información, solo se marca como DELETED.
+        // Esto hará que se sobreescriba si se inserta una nueva clave ahí.
         if (table[index].state == OCCUPIED && table[index].key == key)
         {
             table[index].state = DELETED;
