@@ -54,5 +54,4 @@ Por lo tanto, el tamaño escogido para todas las pruebas es:
 $$ N = 65521$$
 
 ### Nota sobre Hashing Abierto
-Esta consideración se mantiene para la evaluación de **hashing abierto**, para hacer una comparativa "justa" en terminos de memoria asignada inicialmente. Esto causaría que el método de chaining sea muy rápido, pues, la longitud promedio de las listas enlazadas en cada posición será muy baja (cercana a 1), minimizando las búsquedas lineales consecutivas.
-
+Esta consideración se mantiene para la evaluación de **hashing abierto**, para hacer una comparativa "justa" en terminos de memoria asignada inicialmente. Esto en teoría causaría que el método de chaining sea muy rápido (Asumiendo una buena función hash).
